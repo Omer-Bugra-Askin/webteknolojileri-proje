@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Sonucu - Web Teknolojileri Projesi</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" id="sidebar">
+        <div class="container-fluid flex-column align-items-start p-0">
+            <a class="navbar-brand w-100" href="../index.html">
+                <i class="fas fa-code"></i> <span>Ömer Buğra Aşkın</span>
+            </a>
+            <button class="navbar-toggler position-absolute top-0 end-0 m-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse w-100" id="navbarNav">
+                <ul class="navbar-nav flex-column w-100">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            <i class="fas fa-user"></i><span>Hakkımda</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cv.html">
+                            <i class="fas fa-file-alt"></i><span>Özgeçmiş</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="city.html">
+                            <i class="fas fa-city"></i><span>Şehrim</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="heritage.html">
+                            <i class="fas fa-landmark"></i><span>Mirasımız</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="interests.html">
+                            <i class="fas fa-heart"></i><span>İlgi Alanlarım</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contact.html">
+                            <i class="fas fa-envelope"></i><span>İletişim</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">
+                            <i class="fas fa-sign-in-alt"></i><span>Giriş</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <button class="navbar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Result Content -->
+    <div class="container">
+        <div class="result-card">
+            <h2 class="result-title">Form Bilgileri</h2>
+            <div id="formResults"></div>
+            <div class="text-center mt-4">
+                <a href="contact.html" class="btn-back">
+                    <i class="fas fa-arrow-left me-2"></i>İletişim Formuna Dön
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>&copy; 2024 Web Teknolojileri Projesi</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Results Script -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.querySelector('.navbar-toggle i');
+            sidebar.classList.toggle('collapsed');
+            toggleBtn.style.transform = sidebar.classList.contains('collapsed') ? 'rotate(180deg)' : 'rotate(0deg)';
+            toggleBtn.style.transition = 'transform 0.3s ease';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            const formResults = document.getElementById('formResults');
+            
+            // Form verilerini göster
+            const resultData = {
+                'Ad Soyad': params.get('name'),
+                'E-posta': params.get('email'),
+                'Telefon': params.get('phone'),
+                'Konu': getSubjectText(params.get('subject')),
+                'İletişim Tercihi': getContactPrefText(params.get('contactPref')),
+                'Cinsiyet': getGenderText(params.get('gender')),
+                'Mesaj': params.get('message')
+            };
+
+            // Sonuçları HTML olarak oluştur
+            let resultsHTML = '';
+            for (const [key, value] of Object.entries(resultData)) {
+                if (value) {
+                    resultsHTML += `
+                        <div class="result-item">
+                            <span class="result-label">${key}:</span>
+                            <span class="result-value">${value}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            formResults.innerHTML = resultsHTML;
+        });
+
+        // Yardımcı fonksiyonlar
+        function getSubjectText(subject) {
+            const subjects = {
+                'genel': 'Genel Bilgi',
+                'destek': 'Teknik Destek',
+                'oneri': 'Öneri/Şikayet',
+                'diger': 'Diğer'
+            };
+            return subjects[subject] || subject;
+        }
+
+        function getContactPrefText(prefs) {
+            if (!prefs) return '';
+            const prefTexts = {
+                'email': 'E-posta',
+                'phone': 'Telefon'
+            };
+            return prefs.split(',').map(pref => prefTexts[pref] || pref).join(', ');
+        }
+
+        function getGenderText(gender) {
+            const genders = {
+                'male': 'Erkek',
+                'female': 'Kadın'
+            };
+            return genders[gender] || gender;
+        }
+    </script>
+</body>
+</html> 

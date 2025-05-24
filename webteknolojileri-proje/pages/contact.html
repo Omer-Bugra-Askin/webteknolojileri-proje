@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim | Ömer Buğra Aşkın</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-code"></i> Ömer Buğra Aşkın
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            <i class="fas fa-user"></i> Hakkımda
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cv.html">
+                            <i class="fas fa-file-alt"></i> Özgeçmiş
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="city.html">
+                            <i class="fas fa-city"></i> Şehrim
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="heritage.html">
+                            <i class="fas fa-landmark"></i> Mirasımız
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="interests.html">
+                            <i class="fas fa-heart"></i> İlgi Alanlarım
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contact.html">
+                            <i class="fas fa-envelope"></i> İletişim
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">
+                            <i class="fas fa-sign-in-alt"></i> Giriş
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 d-flex flex-column align-items-center justify-content-center">
+                    <h1 class="display-4 text-center w-100">İletişim</h1>
+                    <p class="lead text-center w-100">Benimle iletişime geçin</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- İletişim Formu -->
+    <div class="container" id="app">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="profile-card animate-fadeInUp">
+                    <!-- Form -->
+                    <form id="contactForm" @submit.prevent="validateForm" action="contact.php" method="GET" novalidate>
+                        <div class="row">
+                            <!-- Ad Soyad -->
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Ad Soyad</label>
+                                <input type="text" class="form-control" id="name" v-model="formData.name" name="name" required>
+                                <div class="error-message" v-if="errors.name">{{ errors.name }}</div>
+                            </div>
+
+                            <!-- E-posta -->
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">E-posta</label>
+                                <input type="email" class="form-control" id="email" v-model="formData.email" name="email" required>
+                                <div class="error-message" v-if="errors.email">{{ errors.email }}</div>
+                            </div>
+
+                            <!-- Telefon -->
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Telefon</label>
+                                <input type="tel" class="form-control" id="phone" v-model="formData.phone" name="phone" required>
+                                <div class="error-message" v-if="errors.phone">{{ errors.phone }}</div>
+                            </div>
+
+                            <!-- Konu -->
+                            <div class="col-md-6 mb-3">
+                                <label for="subject" class="form-label">Konu</label>
+                                <select class="form-control" id="subject" v-model="formData.subject" name="subject" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="genel">Genel Bilgi</option>
+                                    <option value="destek">Teknik Destek</option>
+                                    <option value="oneri">Öneri/Şikayet</option>
+                                    <option value="diger">Diğer</option>
+                                </select>
+                                <div class="error-message" v-if="errors.subject">{{ errors.subject }}</div>
+                            </div>
+
+                            <!-- Mesaj -->
+                            <div class="col-12 mb-3">
+                                <label for="message" class="form-label">Mesaj</label>
+                                <textarea class="form-control" id="message" rows="5" v-model="formData.message" name="message" required></textarea>
+                                <div class="error-message" v-if="errors.message">{{ errors.message }}</div>
+                            </div>
+
+                            <!-- Cinsiyet -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label d-block">Cinsiyet</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="male" value="male" v-model="formData.gender" name="gender">
+                                    <label class="form-check-label" for="male">Erkek</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="female" value="female" v-model="formData.gender" name="gender">
+                                    <label class="form-check-label" for="female">Kadın</label>
+                                </div>
+                                <div class="error-message" v-if="errors.gender">{{ errors.gender }}</div>
+                            </div>
+
+                            <!-- İletişim Tercihi -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">İletişim Tercihi</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="emailPref" value="email" v-model="formData.contactPref" name="contactPref">
+                                    <label class="form-check-label" for="emailPref">E-posta</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="phonePref" value="phone" v-model="formData.contactPref" name="contactPref">
+                                    <label class="form-check-label" for="phonePref">Telefon</label>
+                                </div>
+                                <div class="error-message" v-if="errors.contactPref">{{ errors.contactPref }}</div>
+                            </div>
+
+                            <!-- Butonlar -->
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-2"></i>Gönder
+                                </button>
+                                <button type="reset" class="btn btn-secondary ms-2" @click="resetForm">
+                                    <i class="fas fa-undo me-2"></i>Temizle
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vue.js App -->
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    formData: {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        subject: '',
+                        contactPref: [],
+                        gender: '',
+                        message: ''
+                    },
+                    errors: {}
+                }
+            },
+            methods: {
+                validateForm() {
+                    this.errors = {};
+                    let isValid = true;
+
+                    // Ad Soyad kontrolü
+                    if (!this.formData.name.trim()) {
+                        this.errors.name = 'Ad Soyad alanı zorunludur';
+                        isValid = false;
+                    } else if (this.formData.name.length < 3) {
+                        this.errors.name = 'Ad Soyad en az 3 karakter olmalıdır';
+                        isValid = false;
+                    }
+
+                    // E-posta kontrolü
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!this.formData.email.trim()) {
+                        this.errors.email = 'E-posta alanı zorunludur';
+                        isValid = false;
+                    } else if (!emailRegex.test(this.formData.email)) {
+                        this.errors.email = 'Geçerli bir e-posta adresi giriniz';
+                        isValid = false;
+                    }
+
+                    // Telefon kontrolü
+                    const phoneRegex = /^[0-9]{10}$/;
+                    if (!this.formData.phone.trim()) {
+                        this.errors.phone = 'Telefon alanı zorunludur';
+                        isValid = false;
+                    } else if (!phoneRegex.test(this.formData.phone)) {
+                        this.errors.phone = 'Telefon 10 haneli rakam olmalıdır';
+                        isValid = false;
+                    }
+
+                    // Konu kontrolü
+                    if (!this.formData.subject) {
+                        this.errors.subject = 'Lütfen bir konu seçiniz';
+                        isValid = false;
+                    }
+
+                    // İletişim tercihi kontrolü
+                    if (this.formData.contactPref.length === 0) {
+                        this.errors.contactPref = 'En az bir iletişim tercihi seçiniz';
+                        isValid = false;
+                    }
+
+                    // Cinsiyet kontrolü
+                    if (!this.formData.gender) {
+                        this.errors.gender = 'Lütfen cinsiyet seçiniz';
+                        isValid = false;
+                    }
+
+                    // Mesaj kontrolü
+                    if (!this.formData.message.trim()) {
+                        this.errors.message = 'Mesaj alanı zorunludur';
+                        isValid = false;
+                    } else if (this.formData.message.length < 10) {
+                        this.errors.message = 'Mesaj en az 10 karakter olmalıdır';
+                        isValid = false;
+                    }
+
+                    if (isValid) {
+                        document.getElementById('contactForm').submit();
+                    }
+                },
+
+                resetForm() {
+                    this.formData = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        subject: '',
+                        contactPref: [],
+                        gender: '',
+                        message: ''
+                    };
+                    this.errors = {};
+                }
+            }
+        }).mount('#app')
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.querySelector('.navbar-toggle i');
+            sidebar.classList.toggle('collapsed');
+            toggleBtn.style.transform = sidebar.classList.contains('collapsed') ? 'rotate(180deg)' : 'rotate(0deg)';
+            toggleBtn.style.transition = 'transform 0.3s ease';
+        }
+    </script>
+</body>
+</html>
